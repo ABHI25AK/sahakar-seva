@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooperative Worker Dashboard — SahakarSeva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/auth.js"></script>
+<script>
+  // Protect page: require worker role
+  ssGuard('worker');
+</script>
+</head>
+<body>
+
+<div class="admin-shell">
+
+  <aside class="admin-sidebar">
+    <div class="admin-brand"><img src="assets/images/logo.png" alt="SahakarSeva" class="logo-img" style="width:30px; height:30px;"> Sahakar<span class="accent">Seva</span> WORKER</div>
+    <div class="admin-sub">Mumbai Electrical Labour<br>Cooperative Society</div>
+
+    <nav class="admin-nav">
+      <a href="#" class="active">📋 My Job Queue</a>
+      <a href="#">💰 Direct Earnings</a>
+      <a href="#">🛡️ Welfare &amp; Insurance</a>
+      <a href="#">⭐ Member Ratings</a>
+      <a href="#">⚙️ Profile Settings</a>
+    </nav>
+
+    <div class="verified-box">
+      <b>CO-OP BADGE: VERIFIED</b>
+      Federation ID: MELC-2291<br>
+      0% platform commission guaranteed.
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <div>
+        <h1>Welcome Back<span id="workerGreeting">, Ramesh</span></h1>
+        <div class="sub">Manage incoming household bookings, track transparent daily payouts, and view welfare contributions.</div>
+      </div>
+      <div class="admin-user">
+        <div style="display:flex; align-items:center; gap:8px; margin-right:12px;">
+          <span style="font-size:12px; font-weight:700; color:var(--text-soft);">DUTY STATUS:</span>
+          <label class="switch">
+            <input type="checkbox" id="dutyToggle" checked>
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+        <div class="who"><b id="workerName">Ramesh Kumar</b><span>Electrician Grade-A</span></div>
+        <div class="nav-avatar" id="workerAvatar">RK</div>
+        <button class="btn btn-outline btn-sm" onclick="ssLogout()" style="margin-left:6px;">Logout</button>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="label">Today's Direct Earnings</div>
+        <div class="val">₹1,850</div>
+        <div class="delta">100% Payout Floor</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">Completed Bookings</div>
+        <div class="val">4 Jobs</div>
+        <div class="delta">▲ 0 Middleman Deductions</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">Welfare Fund Pool</div>
+        <div class="val">₹420</div>
+        <div class="delta">Auto-Split Insurance</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">Customer Rating</div>
+        <div class="val">4.8 ★</div>
+        <div class="delta">Co-op Certified</div>
+      </div>
+    </div>
+
+    <div class="admin-grid">
+      <!-- Incoming Requests -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Live Service Requests</h3>
+          <span class="badge badge-teal">Nearby Geo-Match</span>
+        </div>
+        <div class="panel-body">
+          <table>
+            <thead>
+              <tr><th>Customer</th><th>Service</th><th>Location</th><th>Payout</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Pooja Sharma</b></td>
+                <td>Main Board Wiring &amp; Fuse</td>
+                <td>Andheri East (1.2 km)</td>
+                <td><b>₹450</b></td>
+                <td><button class="btn btn-primary btn-sm" onclick="this.textContent='Accepted'; this.disabled=true;">Accept</button></td>
+              </tr>
+              <tr>
+                <td><b>Kishore Verma</b></td>
+                <td>AC Power Point Installation</td>
+                <td>Vile Parle (2.8 km)</td>
+                <td><b>₹600</b></td>
+                <td><button class="btn btn-primary btn-sm" onclick="this.textContent='Accepted'; this.disabled=true;">Accept</button></td>
+              </tr>
+              <tr>
+                <td><b>Anita Roy</b></td>
+                <td>Inverter Wiring Check</td>
+                <td>Bandra West (3.5 km)</td>
+                <td><b>₹550</b></td>
+                <td><button class="btn btn-outline btn-sm" onclick="this.textContent='Accepted'; this.disabled=true;">Accept</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Welfare & Federation Benefits -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Cooperative Welfare Coverage</h3>
+          <span class="legend"><span class="dot" style="background:var(--teal);"></span>Active Policy</span>
+        </div>
+        <div class="panel-body">
+          <div style="font-size:13.5px; line-height:1.6; color:var(--text-soft); margin-bottom:14px;">
+            Under the Ministry of Cooperation guidelines, a fixed percentage of each booking is allocated to your <b>Accident Insurance &amp; Skill Development Fund</b>.
+          </div>
+          <div style="background:var(--teal-tint); border-radius:8px; padding:14px; margin-bottom:10px;">
+            <div style="font-weight:700; color:var(--teal-dark); font-size:13.5px;">🛡️ Pradhan Mantri Suraksha Bima (PMSBY)</div>
+            <div style="font-size:12px; color:var(--text-soft); margin-top:2px;">Policy No: COOP-MH-99201 · Active through 2026-27</div>
+          </div>
+          <div style="background:var(--orange-tint); border-radius:8px; padding:14px;">
+            <div style="font-weight:700; color:#8A4E2C; font-size:13.5px;">🎓 Advanced EV Charger &amp; Solar Certification</div>
+            <div style="font-size:12px; color:#8A4E2C; margin-top:2px;">Federation-funded workshop next Saturday in Dadar.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/script.js"></script>
+<script>
+  ssFillName('workerName', 'workerAvatar', 'Ramesh Kumar');
+  ssFillFirstName('workerGreeting');
+</script>
+</body>
+</html>

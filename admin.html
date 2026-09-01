@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Federation Board Control Panel — SahakarSeva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/auth.js"></script>
+<script>
+  // Runs before the page paints — bounces anyone who isn't logged in as
+  // federation admin back to the login screen with this role pre-selected.
+  ssGuard('admin');
+</script>
+</head>
+<body>
+
+<div class="admin-shell">
+
+  <aside class="admin-sidebar">
+    <div class="admin-brand"><img src="assets/images/logo.png" alt="SahakarSeva" class="logo-img" style="width:30px; height:30px;"> Sahakar<span class="accent">Seva</span> FED</div>
+    <div class="admin-sub">Maharashtra State Labour<br>Cooperative Federation</div>
+
+    <nav class="admin-nav">
+      <a href="#" class="active">📊 Dashboard</a>
+      <a href="#">👷 Workers Directory</a>
+      <a href="#">💳 Co-op Payments</a>
+      <a href="#">📁 Federation Reports</a>
+      <a href="#">⚙️ System Settings</a>
+    </nav>
+
+    <div class="verified-box">
+      <b>VERIFIED PLATFORM</b>
+      Secured under direct oversight of Ministry of Cooperation, New Delhi.
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <div>
+        <h1>Federation Board Control Panel</h1>
+        <div class="sub">Governing registrar dashboard monitoring live worker audit queues, demand forecasts, and daily metrics.</div>
+      </div>
+      <div class="admin-user">
+        <div class="who"><b id="adminName">S. K. Kadam</b><span>Registrar Officer</span></div>
+        <div class="nav-avatar" id="adminAvatar">SK</div>
+        <button class="btn btn-outline btn-sm" onclick="ssLogout()" style="margin-left:6px;">Logout</button>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="label">Active Cooperative Workers</div>
+        <div class="val">1,247</div>
+        <div class="delta">▲ +12% this week</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">Today's Scheduled Bookings</div>
+        <div class="val">89</div>
+        <div class="delta">0% middleman fees</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">Monthly Gross Revenue</div>
+        <div class="val">₹4.2 Lakhs</div>
+        <div class="delta">Direct worker settlement</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">Cooperative Service Rating</div>
+        <div class="val">4.6 ★</div>
+        <div class="delta">Federation guaranteed</div>
+      </div>
+    </div>
+
+    <div class="admin-grid">
+      <div class="panel">
+        <div class="panel-head"><h3>Recent Cooperative Bookings</h3><a href="#" class="link">View All Bookings</a></div>
+        <div class="panel-body">
+          <table>
+            <thead>
+              <tr><th>Booking ID</th><th>Craft Service</th><th>Worker</th><th>Customer</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#BS-8931</td><td>Electrician</td><td>Ramesh Kumar</td><td>Rajesh Sharma</td>
+                <td><span class="status-pill completed">Completed</span></td>
+              </tr>
+              <tr>
+                <td>#BS-8932</td><td>Plumber</td><td>Govind Nair</td><td>Sanjay Gupta</td>
+                <td><span class="status-pill progress">In Progress</span></td>
+              </tr>
+              <tr>
+                <td>#BS-8933</td><td>Carpenter</td><td>Harish Salve</td><td>Aarti Mehra</td>
+                <td><span class="status-pill scheduled">Scheduled</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Workforce Demand Forecast</h3>
+          <span class="legend"><span class="dot" style="background:var(--teal);"></span>Actual <span class="dot" style="background:var(--orange); margin-left:8px;"></span>Predicted</span>
+        </div>
+        <div class="panel-body">
+          <div class="chart" id="demandChart">
+            <!-- bars injected by script.js -->
+          </div>
+          <div class="chart-note">⚠️ Demand is expected to surge by 15% on Saturday. Recommended to schedule additional union shifts.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h3>Worker Verification Queue <span style="color:var(--orange); font-weight:700;">· 2 Pending Applications</span></h3><a href="#" class="link">Audit Guidelines</a></div>
+      <div class="panel-body" id="verifyQueue">
+        <div class="verify-row" data-id="karan">
+          <div class="verify-person">
+            <div class="verify-avatar">KJ</div>
+            <div>
+              <div class="name">Karan Johar</div>
+              <div class="meta">Mumbai Electrical Labour Co-op · Designated Craft: Electrician · Submitted 24 Mar 2026</div>
+            </div>
+          </div>
+          <div class="verify-actions">
+            <button class="btn-reject" onclick="handleVerify(this,'reject')">Reject</button>
+            <button class="btn-approve" onclick="handleVerify(this,'approve')">Approve</button>
+          </div>
+        </div>
+        <div class="verify-row" data-id="meena">
+          <div class="verify-person">
+            <div class="verify-avatar">MD</div>
+            <div>
+              <div class="name">Meena Deshmukh</div>
+              <div class="meta">Mahila Sevika Society, Pune · Designated Craft: Caregiver · Submitted 23 Mar 2026</div>
+            </div>
+          </div>
+          <div class="verify-actions">
+            <button class="btn-reject" onclick="handleVerify(this,'reject')">Reject</button>
+            <button class="btn-approve" onclick="handleVerify(this,'approve')">Approve</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/script.js"></script>
+<script>
+  ssFillName('adminName', 'adminAvatar', 'S. K. Kadam');
+</script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — SahakarSeva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/auth.js"></script>
+</head>
+<body>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <a href="index.html" class="logo" style="justify-content:center; margin-bottom:8px;">
+      <img src="assets/images/logo.png" alt="SahakarSeva Logo" class="logo-img" style="width:42px; height:42px;"> Sahakar<span class="accent">Seva</span>
+    </a>
+    <div class="auth-sub">Log in to continue to your cooperative account</div>
+
+    <div class="role-tabs" id="roleTabs">
+      <button class="role-tab" data-role="customer">Customer</button>
+      <button class="role-tab" data-role="worker">Worker</button>
+      <button class="role-tab" data-role="admin">Federation Admin</button>
+    </div>
+
+    <div class="demo-hint" id="demoHint">
+      Demo build — enter any name and password to sign in. No account is created.
+    </div>
+
+    <!-- Customer -->
+    <form class="auth-role-panel" data-panel="customer" onsubmit="return ssHandleLogin(event, 'customer')">
+      <div class="form-group">
+        <label>Full name</label>
+        <input class="form-input" type="text" placeholder="e.g. Rajesh Sharma" required>
+      </div>
+      <div class="form-group">
+        <label>Mobile number or email</label>
+        <input class="form-input" type="text" placeholder="e.g. 98765 43210" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input class="form-input" type="password" placeholder="••••••••" required>
+      </div>
+      <div class="auth-meta-row">
+        <label style="display:flex; align-items:center; gap:6px; color:var(--text-soft);">
+          <input type="checkbox"> Remember me
+        </label>
+        <a href="#">Forgot password?</a>
+      </div>
+      <button type="submit" class="btn btn-customer btn-block">Log In as Customer</button>
+    </form>
+
+    <!-- Worker -->
+    <form class="auth-role-panel" data-panel="worker" onsubmit="return ssHandleLogin(event, 'worker')">
+      <div class="form-group">
+        <label>Full name</label>
+        <input class="form-input" type="text" placeholder="e.g. Ramesh Kumar" required>
+      </div>
+      <div class="form-group">
+        <label>Cooperative / Federation ID</label>
+        <input class="form-input" type="text" placeholder="e.g. MELC-2291" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input class="form-input" type="password" placeholder="••••••••" required>
+      </div>
+      <div class="auth-meta-row">
+        <label style="display:flex; align-items:center; gap:6px; color:var(--text-soft);">
+          <input type="checkbox"> Remember me
+        </label>
+        <a href="#">Forgot password?</a>
+      </div>
+      <button type="submit" class="btn btn-worker btn-block">Log In as Worker</button>
+    </form>
+
+    <!-- Federation Admin -->
+    <form class="auth-role-panel" data-panel="admin" onsubmit="return ssHandleLogin(event, 'admin')">
+      <div class="form-group">
+        <label>Full name</label>
+        <input class="form-input" type="text" placeholder="e.g. S. K. Kadam" required>
+      </div>
+      <div class="form-group">
+        <label>Registrar ID</label>
+        <input class="form-input" type="text" placeholder="e.g. MSLCF-REG-014" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input class="form-input" type="password" placeholder="••••••••" required>
+      </div>
+      <div class="auth-meta-row">
+        <span style="color:var(--text-faint);">Access is logged &amp; audited by the Ministry of Cooperation.</span>
+      </div>
+      <button type="submit" class="btn btn-admin btn-block">Log In to Federation Panel</button>
+    </form>
+
+    <div class="auth-footer-note">
+      New to SahakarSeva? <a href="index.html">Learn how it works</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const roleTabs = document.querySelectorAll('.role-tab');
+  const panels = document.querySelectorAll('.auth-role-panel');
+  const authCard = document.querySelector('.auth-card');
+  const authPage = document.querySelector('.auth-page');
+
+  function setActiveRole(role) {
+    if (authCard) authCard.setAttribute('data-theme', role);
+    if (authPage) authPage.setAttribute('data-theme', role);
+    roleTabs.forEach(t => t.classList.toggle('active', t.dataset.role === role));
+    panels.forEach(p => p.classList.toggle('active', p.dataset.panel === role));
+  }
+
+  roleTabs.forEach(tab => {
+    tab.addEventListener('click', () => setActiveRole(tab.dataset.role));
+  });
+
+  // Pre-select a role from ?role=worker / ?role=admin / ?role=customer
+  const params = new URLSearchParams(window.location.search);
+  const requested = params.get('role');
+  setActiveRole(['customer', 'worker', 'admin'].includes(requested) ? requested : 'customer');
+
+  function ssHandleLogin(evt, role) {
+    evt.preventDefault();
+    const form = evt.target;
+    const nameInput = form.querySelector('input[type="text"]');
+    const name = nameInput.value.trim() || (role === 'admin' ? 'S. K. Kadam' : role === 'worker' ? 'Ramesh Kumar' : 'Rajesh Sharma');
+    ssLogin(role, name);
+    window.location.href = SS_DESTINATIONS[role];
+    return false;
+  }
+</script>
+</body>
+</html>

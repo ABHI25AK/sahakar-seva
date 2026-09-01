@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verified Cooperative Electricians — SahakarSeva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="wrap">
+    <a href="index.html" class="logo"><img src="assets/images/logo.png" alt="SahakarSeva Logo" class="logo-img">Sahakar<span class="accent">Seva</span></a>
+    <div class="nav-search">🔍 <input type="text" placeholder="Search electricians, plumbers, carpenters..."></div>
+    <div class="nav-right">
+      <div class="nav-loc">📍 Mumbai, MH ▾</div>
+      <div class="nav-icon-btn">🔔</div>
+      <div id="navAccountArea"></div>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="breadcrumb" id="pageBreadcrumb">Home &gt; Services &gt; <b>All Services</b></div>
+  <div class="page-head">
+    <h1 id="pageTitle">Verified Cooperative Professionals</h1>
+    <button class="map-toggle">🗺️ Show Map View</button>
+  </div>
+
+  <div class="booking-layout">
+    <!-- Filters -->
+    <aside class="filter-panel">
+      <h3>Filter Services</h3>
+
+      <div class="filter-group">
+        <label class="f-label">Service Category</label>
+        <select class="select-field" id="categorySelect">
+          <option value="all">All Service Categories</option>
+          <option value="plumbers">Plumbers (Leak Fixes & Pipefitting)</option>
+          <option value="electricians">Electricians (Wiring & Repairs)</option>
+          <option value="carpenters">Carpenters (Furniture & Woodwork)</option>
+          <option value="domestic help">Domestic Help (Cleaning & Maid)</option>
+          <option value="caregivers">Caregivers (Elderly & Patient Care)</option>
+          <option value="painters & technicians">Painters &amp; Technicians</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="f-label">Select Date</label>
+        <div class="date-field"><span>Today, 24th March</span> <span>📅</span></div>
+      </div>
+
+      <div class="filter-group">
+        <label class="f-label">Preferred Time Slot</label>
+        <div class="time-tabs">
+          <button class="time-tab active" data-tab="morning">Morning (8-12)</button>
+          <button class="time-tab" data-tab="afternoon">Afternoon (12-4)</button>
+          <button class="time-tab" data-tab="evening">Evening (4-8)</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="f-label">Hourly Rates</label>
+        <input type="range" min="150" max="1000" value="600" id="rateSlider">
+        <div class="range-row"><span>₹150/hr</span><span id="rateVal">₹600/hr</span><span>₹1,000/hr</span></div>
+      </div>
+
+      <div class="filter-group">
+        <label class="f-label">Rating Range</label>
+        <label class="radio-row checked"><input type="radio" name="rating" checked> 4.5★ and above</label>
+        <label class="radio-row"><input type="radio" name="rating"> 4.0★ and above</label>
+        <label class="radio-row"><input type="radio" name="rating"> Show All Ratings</label>
+      </div>
+
+      <button class="btn btn-primary btn-block">Apply Filters</button>
+    </aside>
+
+    <!-- Worker grid -->
+    <section class="worker-grid" id="workerGrid">
+
+      <article class="worker-card" data-category="electricians">
+        <div class="worker-photo">
+          <img src="assets/images/electrician.jpg" alt="Ramesh Kumar - Certified Electrician">
+          <span class="status-chip available">Available Now</span>
+          <span class="rating-chip">★ 4.8</span>
+        </div>
+        <div class="worker-body">
+          <h4>Ramesh Kumar</h4>
+          <div class="coop">Mumbai Electrical Labour Co-op · <b>Electrician</b></div>
+          <div class="tag-row"><span class="tag">Wiring</span><span class="tag">AC Repair</span><span class="tag">Fuses</span></div>
+          <div class="rate-row">
+            <div class="rate">Standard rate<b>₹250 – ₹600/hr</b></div>
+            <button class="btn btn-primary btn-sm">Book Now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="worker-card" data-category="plumbers">
+        <div class="worker-photo">
+          <img src="assets/images/plumber.jpg" alt="Rohit Sharma - Master Plumber">
+          <span class="status-chip available">Available Now</span>
+          <span class="rating-chip">★ 4.9</span>
+        </div>
+        <div class="worker-body">
+          <h4>Rohit Sharma</h4>
+          <div class="coop">Thane Plumbing &amp; Pipefitters Co-op · <b>Plumber</b></div>
+          <div class="tag-row"><span class="tag">Leak Fixes</span><span class="tag">Sanitary Fittings</span><span class="tag">Drainage</span></div>
+          <div class="rate-row">
+            <div class="rate">Standard rate<b>₹250 – ₹550/hr</b></div>
+            <button class="btn btn-primary btn-sm">Book Now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="worker-card" data-category="carpenters">
+        <div class="worker-photo">
+          <img src="assets/images/carpenter.jpg" alt="Harish Salve - Woodwork Craftsman">
+          <span class="status-chip scheduled">Scheduled</span>
+          <span class="rating-chip">★ 4.7</span>
+        </div>
+        <div class="worker-body">
+          <h4>Harish Salve</h4>
+          <div class="coop">Pune Woodcrafters Society · <b>Carpenter</b></div>
+          <div class="tag-row"><span class="tag">Furniture</span><span class="tag">Wood Polishing</span><span class="tag">Locks</span></div>
+          <div class="rate-row">
+            <div class="rate">Standard rate<b>₹300 – ₹650/hr</b></div>
+            <button class="btn btn-primary btn-sm">Book Now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="worker-card" data-category="domestic help">
+        <div class="worker-photo">
+          <img src="assets/images/domestic_help.jpg" alt="Meena Deshmukh - Housekeeping Specialist">
+          <span class="status-chip available">Available Now</span>
+          <span class="rating-chip">★ 4.9</span>
+        </div>
+        <div class="worker-body">
+          <h4>Meena Deshmukh</h4>
+          <div class="coop">Mahila Sevika Sahakari Sanstha · <b>Domestic Help</b></div>
+          <div class="tag-row"><span class="tag">Deep Cleaning</span><span class="tag">Housekeeping</span><span class="tag">Kitchen</span></div>
+          <div class="rate-row">
+            <div class="rate">Standard rate<b>₹200 – ₹450/hr</b></div>
+            <button class="btn btn-primary btn-sm">Book Now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="worker-card" data-category="caregivers">
+        <div class="worker-photo">
+          <img src="assets/images/caregiver.jpg" alt="Priya Kulkarni - Certified Caregiver">
+          <span class="status-chip available">Available Now</span>
+          <span class="rating-chip">★ 4.8</span>
+        </div>
+        <div class="worker-body">
+          <h4>Priya Kulkarni</h4>
+          <div class="coop">Maharashtra Health Sevika Co-op · <b>Caregiver</b></div>
+          <div class="tag-row"><span class="tag">Elderly Care</span><span class="tag">Patient Assist</span><span class="tag">Vitals</span></div>
+          <div class="rate-row">
+            <div class="rate">Standard rate<b>₹350 – ₹750/hr</b></div>
+            <button class="btn btn-primary btn-sm">Book Now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="worker-card" data-category="painters & technicians">
+        <div class="worker-photo">
+          <img src="assets/images/painter.jpg" alt="Vicky Chauhan - Master Painter">
+          <span class="status-chip available">Available Now</span>
+          <span class="rating-chip">★ 4.6</span>
+        </div>
+        <div class="worker-body">
+          <h4>Vicky Chauhan</h4>
+          <div class="coop">Navi Mumbai Painters Union · <b>Painter</b></div>
+          <div class="tag-row"><span class="tag">Wall Painting</span><span class="tag">Waterproofing</span><span class="tag">Appliances</span></div>
+          <div class="rate-row">
+            <div class="rate">Standard rate<b>₹280 – ₹600/hr</b></div>
+            <button class="btn btn-primary btn-sm">Book Now</button>
+          </div>
+        </div>
+      </article>
+
+    </section>
+  </div>
+</main>
+
+<script src="js/auth.js"></script>
+<script src="js/script.js"></script>
+<script>
+  ssRenderAccountArea('navAccountArea', 'customer');
+</script>
+</body>
+</html>
