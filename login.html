@@ -9,28 +9,23 @@
 <link rel="stylesheet" href="css/style.css">
 <script src="js/auth.js"></script>
 <style>
-  .quick-demo-btn {
-    display: inline-block;
-    padding: 4px 10px;
-    margin: 4px 4px 4px 0;
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 6px;
-    background: rgba(255,255,255,0.25);
-    color: inherit;
-    border: 1px solid rgba(255,255,255,0.4);
-    cursor: pointer;
-    transition: all .15s ease;
-  }
-  .quick-demo-btn:hover {
-    background: #ffffff;
-    color: #05070B;
+  .auth-error-box {
+    display: none;
+    background: #FFECEC;
+    color: #C53030;
+    border: 1px solid #FEB2B2;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    line-height: 1.4;
   }
   .modal-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.65);
     backdrop-filter: blur(4px);
     z-index: 1000;
     align-items: center;
@@ -76,11 +71,14 @@
       <button class="role-tab" data-role="admin">Federation Admin</button>
     </div>
 
+    <!-- Error Box -->
+    <div class="auth-error-box" id="authError"></div>
+
     <!-- Customer Form (2 Fields: Email & Password) -->
     <form class="auth-role-panel" data-panel="customer" onsubmit="return ssHandleLogin(event, 'customer')">
       <div class="form-group">
         <label>Email Address</label>
-        <input class="form-input" id="custEmail" type="email" placeholder="customer1@sahakarseva.in" required>
+        <input class="form-input" id="custEmail" type="email" placeholder="rajesh.sharma@gmail.com" required>
       </div>
       <div class="form-group">
         <label>Password</label>
@@ -98,8 +96,8 @@
     <!-- Worker Form (2 Fields: Email & Password) -->
     <form class="auth-role-panel" data-panel="worker" onsubmit="return ssHandleLogin(event, 'worker')">
       <div class="form-group">
-        <label>Cooperative Email / ID</label>
-        <input class="form-input" id="workEmail" type="text" placeholder="worker1@sahakarseva.in" required>
+        <label>Cooperative Worker Email</label>
+        <input class="form-input" id="workEmail" type="email" placeholder="ramesh.kumar@gmail.com" required>
       </div>
       <div class="form-group">
         <label>Password</label>
@@ -118,7 +116,7 @@
     <form class="auth-role-panel" data-panel="admin" onsubmit="return ssHandleLogin(event, 'admin')">
       <div class="form-group">
         <label>Registrar Official Email</label>
-        <input class="form-input" id="adminEmail" type="email" placeholder="admin1@sahakarseva.gov.in" required>
+        <input class="form-input" id="adminEmail" type="email" placeholder="sk.kadam@sahakarseva.gov.in" required>
       </div>
       <div class="form-group">
         <label>Password</label>
@@ -143,8 +141,10 @@
     <span class="close-modal" onclick="closeRegisterModal()">&times;</span>
     <div style="text-align:center; margin-bottom:18px;">
       <h3 style="font-size:20px; font-weight:800; color:#028090; margin-bottom:4px;">Create New Account</h3>
-      <p style="font-size:12.5px; color:#565F6B;">Join SahakarSeva Cooperative Platform</p>
+      <p style="font-size:12.5px; color:#565F6B;">Register into SahakarSeva Database</p>
     </div>
+
+    <div class="auth-error-box" id="regError" style="margin-bottom:12px;"></div>
 
     <form onsubmit="return handleRegisterSubmit(event)">
       <div class="form-group">
@@ -152,8 +152,8 @@
         <input class="form-input" type="text" id="regName" placeholder="e.g. Vikramaditya Singh" style="border:1px solid #DCE8E9; color:#081B1E;" required>
       </div>
       <div class="form-group">
-        <label style="color:#081B1E;">Email Address</label>
-        <input class="form-input" type="email" id="regEmail" placeholder="yourname@example.com" style="border:1px solid #DCE8E9; color:#081B1E;" required>
+        <label style="color:#081B1E;">Email Address (valid gmail / email)</label>
+        <input class="form-input" type="email" id="regEmail" placeholder="vikram@gmail.com" style="border:1px solid #DCE8E9; color:#081B1E;" required>
       </div>
       <div class="form-group">
         <label style="color:#081B1E;">Account Role</label>
@@ -167,11 +167,11 @@
         <label style="color:#081B1E;">Password</label>
         <input class="form-input" type="password" id="regPass" placeholder="••••••••" style="border:1px solid #DCE8E9; color:#081B1E;" required>
       </div>
-      <button type="submit" class="btn btn-primary btn-block" style="margin-top:10px;">Register &amp; Continue</button>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:10px;">Register &amp; Save to Database</button>
     </form>
 
     <div style="text-align:center; margin-top:14px; font-size:12.5px; color:#565F6B;">
-      Already have an account? <a href="#" onclick="closeRegisterModal()" style="color:#028090; font-weight:700;">Log In</a>
+      Already registered? <a href="#" onclick="closeRegisterModal()" style="color:#028090; font-weight:700;">Log In Here</a>
     </div>
   </div>
 </div>
@@ -181,12 +181,16 @@
   const panels = document.querySelectorAll('.auth-role-panel');
   const authCard = document.querySelector('.auth-card');
   const authPage = document.querySelector('.auth-page');
-  const demoAccountsList = document.getElementById('demoAccountsList');
+  const authError = document.getElementById('authError');
+  const regError = document.getElementById('regError');
 
-  let currentRole = 'customer';
+  function hideErrors() {
+    if (authError) authError.style.display = 'none';
+    if (regError) regError.style.display = 'none';
+  }
 
   function setActiveRole(role) {
-    currentRole = role;
+    hideErrors();
     if (authCard) authCard.setAttribute('data-theme', role);
     if (authPage) authPage.setAttribute('data-theme', role);
     roleTabs.forEach(t => t.classList.toggle('active', t.dataset.role === role));
@@ -201,64 +205,58 @@
   const requested = params.get('role');
   setActiveRole(['customer', 'worker', 'admin'].includes(requested) ? requested : 'customer');
 
-  function quickFillLogin(role, email, pass, name) {
-    let emailInput, passInput;
-    if (role === 'customer') {
-      emailInput = document.getElementById('custEmail');
-      passInput = document.getElementById('custPass');
-    } else if (role === 'worker') {
-      emailInput = document.getElementById('workEmail');
-      passInput = document.getElementById('workPass');
-    } else {
-      emailInput = document.getElementById('adminEmail');
-      passInput = document.getElementById('adminPass');
-    }
-    if (emailInput) emailInput.value = email;
-    if (passInput) passInput.value = pass;
-
-    // Login & Redirect
-    ssLogin(role, name, email);
-    window.location.href = SS_DESTINATIONS[role];
-  }
-
   function ssHandleLogin(evt, role) {
     evt.preventDefault();
+    hideErrors();
+
     const form = evt.target;
-    const emailInput = form.querySelector('input[type="email"], input[type="text"]');
+    const emailInput = form.querySelector('input[type="email"]');
     const passInput = form.querySelector('input[type="password"]');
 
     const email = emailInput ? emailInput.value.trim() : '';
     const pass = passInput ? passInput.value.trim() : '';
 
-    // Check if matching unique demo account
-    const accs = SS_DEMO_ACCOUNTS[role] || [];
-    const matched = accs.find(a => a.email.toLowerCase() === email.toLowerCase());
+    const res = ssAuthenticateUser(role, email, pass);
 
-    const finalName = matched ? matched.name : (email ? email.split('@')[0] : (role === 'admin' ? 'S. K. Kadam' : role === 'worker' ? 'Ramesh Kumar' : 'Rajesh Sharma'));
+    if (res.success) {
+      window.location.href = SS_DESTINATIONS[role];
+    } else {
+      authError.textContent = res.error;
+      authError.style.display = 'block';
+    }
 
-    ssLogin(role, finalName, email);
-    window.location.href = SS_DESTINATIONS[role];
     return false;
   }
 
-  // Registration Modal Controls
   function openRegisterModal(e) {
     if (e) e.preventDefault();
+    hideErrors();
     document.getElementById('registerModal').classList.add('active');
   }
 
   function closeRegisterModal() {
+    hideErrors();
     document.getElementById('registerModal').classList.remove('active');
   }
 
   function handleRegisterSubmit(e) {
     e.preventDefault();
-    const name = document.getElementById('regName').value.trim();
-    const email = document.getElementById('regEmail').value.trim();
-    const role = document.getElementById('regRole').value;
+    hideErrors();
 
-    ssLogin(role, name, email);
-    window.location.href = SS_DESTINATIONS[role];
+    const name = document.getElementById('regName').value;
+    const email = document.getElementById('regEmail').value;
+    const role = document.getElementById('regRole').value;
+    const pass = document.getElementById('regPass').value;
+
+    const res = ssRegisterUser(name, email, role, pass);
+
+    if (res.success) {
+      window.location.href = SS_DESTINATIONS[role];
+    } else {
+      regError.textContent = res.error;
+      regError.style.display = 'block';
+    }
+
     return false;
   }
 </script>

@@ -1,8 +1,9 @@
 // ===========================================================
-// SahakarSeva — client-side auth & prototype demo logins
+// SahakarSeva — Persistent User Database & Strict Auth Validation
 // ===========================================================
 
 const SS_SESSION_KEY = 'sahakarseva_session';
+const SS_USERS_KEY = 'sahakarseva_users_db';
 
 const SS_DESTINATIONS = {
   customer: 'booking.html',
@@ -16,21 +17,103 @@ const SS_ROLE_LABELS = {
   admin: 'Federation Admin',
 };
 
-// 2 Unique Demo Accounts Per Role for Prototype Demo
-const SS_DEMO_ACCOUNTS = {
-  customer: [
-    { email: 'customer1@sahakarseva.in', pass: 'demo123', name: 'Rajesh Sharma' },
-    { email: 'customer2@sahakarseva.in', pass: 'demo123', name: 'Pooja Verma' }
-  ],
-  worker: [
-    { email: 'worker1@sahakarseva.in', pass: 'demo123', name: 'Ramesh Kumar' },
-    { email: 'worker2@sahakarseva.in', pass: 'demo123', name: 'Rohit Plumber' }
-  ],
-  admin: [
-    { email: 'admin1@sahakarseva.gov.in', pass: 'demo123', name: 'S. K. Kadam' },
-    { email: 'admin2@sahakarseva.gov.in', pass: 'demo123', name: 'Anita Deshmukh' }
-  ]
-};
+// Initial Seed Users in Database (Valid Email Formats)
+const SS_INITIAL_USERS = [
+  { name: 'Rajesh Sharma', email: 'rajesh.sharma@gmail.com', pass: 'password123', role: 'customer' },
+  { name: 'Pooja Verma', email: 'pooja.verma@gmail.com', pass: 'password123', role: 'customer' },
+  { name: 'Ramesh Kumar', email: 'ramesh.kumar@gmail.com', pass: 'password123', role: 'worker' },
+  { name: 'Rohit Plumber', email: 'rohit.plumber@gmail.com', pass: 'password123', role: 'worker' },
+  { name: 'S. K. Kadam', email: 'sk.kadam@sahakarseva.gov.in', pass: 'password123', role: 'admin' },
+  { name: 'Anita Deshmukh', email: 'anita.deshmukh@sahakarseva.gov.in', pass: 'password123', role: 'admin' }
+];
+
+// Initialize persistent user database in localStorage if not present
+function ssGetUsersDB() {
+  try {
+    const raw = localStorage.getItem(SS_USERS_KEY);
+    if (!raw) {
+      localStorage.setItem(SS_USERS_KEY, JSON.stringify(SS_INITIAL_USERS));
+      return SS_INITIAL_USERS;
+    }
+    return JSON.parse(raw);
+  } catch (e) {
+    return SS_INITIAL_USERS;
+  }
+}
+
+function ssSaveUsersDB(users) {
+  try {
+    localStorage.setItem(SS_USERS_KEY, JSON.stringify(users));
+  } catch (e) {
+    console.error('Failed to save users database');
+  }
+}
+
+// Validate Email Format Regex
+function ssIsValidEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(String(email).toLowerCase());
+}
+
+// Authenticate user against database
+function ssAuthenticateUser(role, email, password) {
+  if (!email || !ssIsValidEmail(email)) {
+    return { success: false, error: 'Please enter a valid email address (e.g. name@gmail.com).' };
+  }
+  if (!password) {
+    return { success: false, error: 'Please enter your password.' };
+  }
+
+  const users = ssGetUsersDB();
+  const matched = users.find(u => 
+    u.email.toLowerCase() === email.trim().toLowerCase() && 
+    u.pass === password && 
+    u.role === role
+  );
+
+  if (matched) {
+    ssLogin(matched.role, matched.name, matched.email);
+    return { success: true, user: matched };
+  }
+
+  return { 
+    success: false, 
+    error: 'Invalid email or password. Please check your credentials or click "Create New Account" below to register.' 
+  };
+}
+
+// Register new user into persistent database
+function ssRegisterUser(name, email, role, password) {
+  if (!name || name.trim().length < 2) {
+    return { success: false, error: 'Please enter your full name.' };
+  }
+  if (!email || !ssIsValidEmail(email)) {
+    return { success: false, error: 'Please enter a valid email address (e.g. name@gmail.com).' };
+  }
+  if (!password || password.length < 4) {
+    return { success: false, error: 'Password must be at least 4 characters.' };
+  }
+
+  const users = ssGetUsersDB();
+  const existing = users.find(u => u.email.toLowerCase() === email.trim().toLowerCase());
+  if (existing) {
+    return { success: false, error: 'This email is already registered. Please log in instead.' };
+  }
+
+  const newUser = {
+    name: name.trim(),
+    email: email.trim().toLowerCase(),
+    pass: password,
+    role: role
+  };
+
+  users.push(newUser);
+  ssSaveUsersDB(users);
+
+  // Auto login after registration
+  ssLogin(newUser.role, newUser.name, newUser.email);
+  return { success: true, user: newUser };
+}
 
 function ssGetSession() {
   try {
