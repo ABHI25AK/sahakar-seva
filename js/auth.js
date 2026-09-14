@@ -1,10 +1,5 @@
 // ===========================================================
-// SahakarSeva — client-side auth (demo only)
-// This simulates login/session state with localStorage so the
-// three role-based screens can be demoed end-to-end without a
-// backend yet. Swap ssLogin()'s body for a real POST /auth/login
-// call once the Node/Express API exists — everything else
-// (guards, nav rendering) can stay as-is.
+// SahakarSeva — client-side auth & prototype demo logins
 // ===========================================================
 
 const SS_SESSION_KEY = 'sahakarseva_session';
@@ -21,6 +16,22 @@ const SS_ROLE_LABELS = {
   admin: 'Federation Admin',
 };
 
+// 2 Unique Demo Accounts Per Role for Prototype Demo
+const SS_DEMO_ACCOUNTS = {
+  customer: [
+    { email: 'customer1@sahakarseva.in', pass: 'demo123', name: 'Rajesh Sharma' },
+    { email: 'customer2@sahakarseva.in', pass: 'demo123', name: 'Pooja Verma' }
+  ],
+  worker: [
+    { email: 'worker1@sahakarseva.in', pass: 'demo123', name: 'Ramesh Kumar' },
+    { email: 'worker2@sahakarseva.in', pass: 'demo123', name: 'Rohit Plumber' }
+  ],
+  admin: [
+    { email: 'admin1@sahakarseva.gov.in', pass: 'demo123', name: 'S. K. Kadam' },
+    { email: 'admin2@sahakarseva.gov.in', pass: 'demo123', name: 'Anita Deshmukh' }
+  ]
+};
+
 function ssGetSession() {
   try {
     const raw = localStorage.getItem(SS_SESSION_KEY);
@@ -30,8 +41,8 @@ function ssGetSession() {
   }
 }
 
-function ssLogin(role, name) {
-  const session = { role, name, loggedInAt: new Date().toISOString() };
+function ssLogin(role, name, email) {
+  const session = { role, name, email: email || '', loggedInAt: new Date().toISOString() };
   localStorage.setItem(SS_SESSION_KEY, JSON.stringify(session));
   return session;
 }
@@ -41,9 +52,6 @@ function ssLogout() {
   window.location.href = 'login.html';
 }
 
-// Call at the top of a protected page. If there's no session, or the
-// session's role doesn't match what the page requires, redirect to
-// login with that role pre-selected.
 function ssGuard(requiredRole) {
   const session = ssGetSession();
   if (!session || session.role !== requiredRole) {
@@ -53,8 +61,6 @@ function ssGuard(requiredRole) {
   return session;
 }
 
-// Fill a name/avatar pair from the session, falling back to a demo
-// value on pages opened directly without going through login.html.
 function ssFillName(nameElId, avatarElId, fallbackName) {
   const session = ssGetSession();
   const name = (session && session.name) ? session.name : fallbackName;
@@ -74,8 +80,6 @@ function ssFillFirstName(elId) {
   if (el) el.textContent = `, ${name.split(' ')[0]}`;
 }
 
-// Landing page nav: swap "Login" for "Hi, <name> · Logout" if a
-// session already exists.
 function ssReflectNav(loginLinkId) {
   const session = ssGetSession();
   const el = document.getElementById(loginLinkId);
@@ -90,8 +94,6 @@ function ssReflectNav(loginLinkId) {
   }
 }
 
-// Booking page nav: render either an avatar (logged in) or a Login
-// button (not logged in) into the given container.
 function ssRenderAccountArea(containerId, expectedRole) {
   const session = ssGetSession();
   const container = document.getElementById(containerId);
