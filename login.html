@@ -76,12 +76,6 @@
       <button class="role-tab" data-role="admin">Federation Admin</button>
     </div>
 
-    <!-- Demo Account Quick Logins -->
-    <div class="demo-hint" id="demoHint">
-      <div style="font-weight:700; margin-bottom:4px;">✨ Prototype Demo Accounts (Click to Quick Login):</div>
-      <div id="demoAccountsList"></div>
-    </div>
-
     <!-- Customer Form (2 Fields: Email & Password) -->
     <form class="auth-role-panel" data-panel="customer" onsubmit="return ssHandleLogin(event, 'customer')">
       <div class="form-group">
@@ -191,22 +185,12 @@
 
   let currentRole = 'customer';
 
-  function renderDemoChips(role) {
-    const accs = SS_DEMO_ACCOUNTS[role] || [];
-    demoAccountsList.innerHTML = accs.map((a, idx) => `
-      <button type="button" class="quick-demo-btn" onclick="quickFillLogin('${role}', '${a.email}', '${a.pass}', '${a.name}')">
-        👤 ${a.name} (${a.email.split('@')[0]})
-      </button>
-    `).join('');
-  }
-
   function setActiveRole(role) {
     currentRole = role;
     if (authCard) authCard.setAttribute('data-theme', role);
     if (authPage) authPage.setAttribute('data-theme', role);
     roleTabs.forEach(t => t.classList.toggle('active', t.dataset.role === role));
     panels.forEach(p => p.classList.toggle('active', p.dataset.panel === role));
-    renderDemoChips(role);
   }
 
   roleTabs.forEach(tab => {
